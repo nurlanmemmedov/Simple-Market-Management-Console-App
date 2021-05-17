@@ -37,6 +37,9 @@ public class InputReader {
                 if (price >= min && price <= max){
                     break;
                 }
+                if (price < 0){
+                    System.out.println("Price can't be less than zero");
+                }
             }catch (Exception e){
                 System.out.println("Please type correct price");
             }
@@ -45,8 +48,17 @@ public class InputReader {
     }
 
     public static String readString(String message){
-        System.out.print(message);
-        String str = scanner.nextLine();
+        String str = new String();
+        while (true){
+            System.out.print(message);
+            str = scanner.nextLine();
+            if (!str.equals("")){
+                break;
+            }
+            else{
+                System.out.println("input can't be empty");
+            }
+        }
         return str;
     }
 

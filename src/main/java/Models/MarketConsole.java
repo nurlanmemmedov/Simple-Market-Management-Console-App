@@ -189,6 +189,14 @@ public class MarketConsole {
     public void showProductsByPriceRange(){
         float minPrice = InputReader.readFloat("Type minimum price ", 0, Float.MAX_VALUE);
         float maxPrice = InputReader.readFloat("Type maximum price ", 0, Float.MAX_VALUE);
+        if (minPrice < 0 || maxPrice < 0){
+            System.out.println("Prices can't be less than zero, Please type again");
+            showProductsByPriceRange();
+        }
+        if (minPrice > maxPrice){
+            System.out.println("Minimum price must be less than maximum price, Please type again");
+            showProductsByPriceRange();
+        }
         this.marketable.getProductsByPriceRange(minPrice, maxPrice);
     }
 
@@ -204,8 +212,15 @@ public class MarketConsole {
         boolean addAnother = false;
         do{
             String imei = InputReader.readString("Enter imei code of product: ");
-            int count = InputReader.readInt("Enter count of product: ", 1, Integer.MAX_VALUE);
             Product product = this.marketable.getProductByImei(imei);
+            if (product == null){
+                addSale();
+            }
+            int count = InputReader.readInt("Enter count of product: ", 1, Integer.MAX_VALUE);
+            if (count > product.getCount()){
+                System.out.println("Count can't be less than product count");
+                return;
+            }
             saleItems.add(this.marketable.addSaleItem(product, product.getPrice(), count));
             addAnother = InputReader.readBoolean("Do you want to add another product");
         }while (addAnother);
@@ -220,6 +235,10 @@ public class MarketConsole {
     public void showSalesByDateRange(){
         LocalDate startDate = InputReader.readDate("Enter start date: ");
         LocalDate endDate = InputReader.readDate("Enter end date: ");
+        if (endDate.isBefore(startDate)){
+            System.out.println("End date must be after the start date");
+            showSalesByDateRange();
+        }
         this.marketable.getSalesByDateRange(startDate, endDate);
     }
 
@@ -231,6 +250,15 @@ public class MarketConsole {
     public void showSalesByPriceRange(){
         Float minPrice = InputReader.readFloat("Enter minimum price: ", 0 , Float.MAX_VALUE);
         Float maxPrice = InputReader.readFloat("Enter maximum price: ", 0 , Float.MAX_VALUE);
+
+        if (minPrice < 0 || maxPrice < 0){
+            System.out.println("Prices can't be less than zero, Please type again");
+            showSalesByPriceRange();
+        }
+        if (minPrice > maxPrice){
+            System.out.println("Minimum price must be less than maximum price, Please type again");
+            showSalesByPriceRange();
+        }
         this.marketable.getSalesByPriceRange(minPrice, maxPrice);
     }
 
@@ -241,7 +269,10 @@ public class MarketConsole {
 
     public void revertSaleItem(){
         String saleNo = InputReader.readString("Please enter number of sale: ");
-        if(marketable.getSaleByNumber(saleNo) == null) return;
+        if(marketable.getSaleByNumber(saleNo) == null){
+            System.out.println("Can't find such sale");
+            revertSaleItem();
+        }
         String itemCode = InputReader.readString("Please enter code of sale item: ");
         int count = InputReader.readInt("Please enter count of sale item: ", 0, Integer.MAX_VALUE);
         marketable.revertSaleItem(saleNo, itemCode, count);

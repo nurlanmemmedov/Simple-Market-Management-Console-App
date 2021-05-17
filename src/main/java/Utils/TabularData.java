@@ -1,10 +1,7 @@
 package Utils;
-
 import Models.Product;
 import Models.Sale;
 import Models.SaleItem;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class TabularData {

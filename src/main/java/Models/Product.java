@@ -31,6 +31,10 @@ public class Product {
         this.count -= count;
     }
 
+    public void increaseCount(int count){
+        this.count += count;
+    }
+
     public String getName() {
         return name;
     }

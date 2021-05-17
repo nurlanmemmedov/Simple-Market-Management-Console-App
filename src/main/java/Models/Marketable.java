@@ -49,6 +49,10 @@ public class Marketable implements IMarketable {
     @Override
     public void removeSale(String saleNo) {
         Sale sale = getSaleByNumber(saleNo);
+        if (sale.isSoftDeleted() == true){
+            System.out.println("Sale is already deleted");
+            return;
+        }
         sale.setSoftDeleted(true);
         Check check = new Check(sale.getPrice(), CheckType.SALEDELETE, BillingType.CREDIT);
         this.checks.add(check);
@@ -59,6 +63,8 @@ public class Marketable implements IMarketable {
         Sale sale = getSaleByNumber(saleNo);
         SaleItem item = getSaleItemByCode(sale, itemCode);
         if (item == null) return;
+        if (item.getProduct() == null) return;
+        item.getProduct().increaseCount(count);
         item.updateCount(count);
         sale.setPrice(sale.getTotalPrice());
         Check check = new Check(item.getPrice()*item.getCount(), CheckType.REVERT, BillingType.CREDIT);
@@ -148,6 +154,10 @@ public class Marketable implements IMarketable {
     public void deleteProductByImei(String imei) {
         Product product = getProductByImei(imei);
         if (product == null){
+            return;
+        }
+        if (product.isSoftDeleted() == true){
+            System.out.println("Product is already deleted");
             return;
         }
         product.setSoftDeleted(true);

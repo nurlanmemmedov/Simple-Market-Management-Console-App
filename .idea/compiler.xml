@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="14-05-2021-nurlanmemmedov" />
         <module name="MarketManagement" />
+        <module name="Simple-Market-Management-Console-App" />
       </profile>
     </annotationProcessing>
   </component>
